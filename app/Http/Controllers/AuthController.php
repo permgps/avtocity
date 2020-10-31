@@ -11,7 +11,8 @@ class AuthController extends Controller
         if (!$token = auth()->attempt([
             'phone' => $request['phone'],
             'password' => $request['password'],
-            'status' => 1
+            'status' => 1,
+            'role' => 1
         ]))
         {
             return response(null,401);

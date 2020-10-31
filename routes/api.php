@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CarController;
 use App\Http\Controllers\DriverController;
+use App\Http\Controllers\EventController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TemplateController;
 
@@ -29,6 +30,7 @@ Route::group(['prefix' => 'driver','middleware' => ['auth']], function() {
     Route::get('load',[DriverController::class, 'load']);
     Route::post('save',[DriverController::class, 'save']);
     Route::post('delete',[DriverController::class, 'delete']);
+    Route::post('feel',[DriverController::class, 'feel']);
 });
 
 Route::group(['prefix' => 'student','middleware' => ['auth']], function() {
@@ -41,4 +43,11 @@ Route::group(['prefix' => 'template','middleware' => ['auth']], function() {
     Route::get('load',[TemplateController::class, 'load']);
     Route::post('save',[TemplateController::class, 'save']);
     Route::post('delete',[TemplateController::class, 'delete']);
+});
+
+Route::group(['prefix' => 'event','middleware' => ['auth']], function() {
+    Route::get('load',[EventController::class, 'load']);
+    Route::post('save',[EventController::class, 'save']);
+    Route::post('delete',[EventController::class, 'delete']);
+    Route::post('clearstudent',[EventController::class, 'clearstudent']);
 });
