@@ -20,3 +20,7 @@ Route::get('/', function () {
 Route::get('/app/{any}', function ($any) {
     return view('welcome');
 })->where('any', '.*');
+
+Route::get('/login', function () {
+    return view('welcome');
+});

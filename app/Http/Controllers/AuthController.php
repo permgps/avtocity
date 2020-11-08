@@ -12,7 +12,6 @@ class AuthController extends Controller
             'phone' => $request['phone'],
             'password' => $request['password'],
             'status' => 1,
-            'role' => 1
         ]))
         {
             return response(null,401);

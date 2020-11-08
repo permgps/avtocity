@@ -29,6 +29,7 @@ Route::group(['prefix' => 'car','middleware' => ['auth']], function() {
 Route::group(['prefix' => 'driver','middleware' => ['auth']], function() {
     Route::get('load',[DriverController::class, 'load']);
     Route::post('save',[DriverController::class, 'save']);
+    Route::post('edit',[DriverController::class, 'edit']);
     Route::post('delete',[DriverController::class, 'delete']);
     Route::post('feel',[DriverController::class, 'feel']);
 });
@@ -36,6 +37,7 @@ Route::group(['prefix' => 'driver','middleware' => ['auth']], function() {
 Route::group(['prefix' => 'student','middleware' => ['auth']], function() {
     Route::get('load',[StudentController::class, 'load']);
     Route::post('save',[StudentController::class, 'save']);
+    Route::post('edit',[StudentController::class, 'edit']);
     Route::post('delete',[StudentController::class, 'delete']);
 });
 

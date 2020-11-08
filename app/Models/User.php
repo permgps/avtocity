@@ -4,13 +4,14 @@ namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -47,6 +48,11 @@ class User extends Authenticatable implements JWTSubject
     public function students()
     {
         return $this->belongsToMany('App\Models\User', 'driver_student', 'driver_id', 'student_id');
+    }
+
+    public function payments()
+    {
+        return $this->hasMany('App\Models\Payment');
     }
 
     /**

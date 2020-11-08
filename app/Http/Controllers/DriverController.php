@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DriverEditRequest;
+use App\Http\Requests\DriverSaveRequest;
 use App\Models\Template;
 use App\Models\User;
 use App\Services\Events;
@@ -12,41 +14,53 @@ class DriverController extends Controller
 {
     public function load(Request $request)
     {
-        $drivers = User::where('role',4)->with('cars')->get();
+        $user = $request->user();
+        $user = $request->user();
+        if ($user->role == 1) {
+            $drivers = User::where('role',4)->with('cars')->get();
+        }
+        if ($user->role == 4) {
+            $drivers = User::where('id',$user->id)->with('cars')->get();
+        }
+        if ($user->role == 5) {
+            exit;
+        }
+
         return response()->json([
             'drivers' => $drivers
         ]);
     }
 
-    public function save(Request $request)
+    public function save(DriverSaveRequest $request)
     {
-        if ($request['id']) {
-            $driver = User::find($request['id']);
-            $driver->update($request->only('name', 'phone', 'status'));
-            $driver->cars()->detach();
-            if ($request['car_id']) {
-                $driver->cars()->attach($request['car_id']);
-            }
-            if ($request['password']) {
-                $driver->password = bcrypt($request['password']);
-                $driver->save();
-            }
-        } else {
-            $driver = User::create([
-                'name' => $request['name'],
-                'phone' => $request['phone'],
-                'password' => bcrypt($request['password'])
-            ]);
-            if ($request['car_id']) {
-                $driver->cars()->attach($request['car_id']);
-            }
-            $driver->role = 4;
-            $driver->save();
+        $driver = User::create([
+            'name' => $request['name'],
+            'phone' => $request['phone'],
+            'password' => bcrypt($request['password'])
+        ]);
+        if ($request['car_id']) {
+            $driver->cars()->attach($request['car_id']);
         }
+        $driver->role = 4;
+        $driver->save();
 
         return response()->json([
             'id' => $driver->id
         ]);
+    }
+
+    public function edit(DriverEditRequest $request)
+    {
+        $driver = User::find($request['id']);
+        $driver->update($request->only('name', 'status'));
+        $driver->cars()->detach();
+        if ($request['car_id']) {
+            $driver->cars()->attach($request['car_id']);
+        }
+        if ($request['password']) {
+            $driver->password = bcrypt($request['password']);
+            $driver->save();
+        }
     }
 
     public function delete(Request $request)
@@ -64,14 +78,25 @@ class DriverController extends Controller
     {
         $res = [];
         $eventService = new Events();
+        $user = $request->user();
+        $driver_id = null;
+        if ($user->role == 1) {
+
+        }
+        if ($user->role == 4) {
+            $driver_id = $user->id;
+        }
+        if ($user->role == 5) {
+            exit;
+        }
         if ($request['tab'] == 'period') {
-            $events = $eventService->getEvents($request['period']['start'],$request['period']['end']);
+            $events = $eventService->getEvents($request['period']['start'],$request['period']['end'],$driver_id);
             $razn = strtotime(Helper::getDT($request['period']['to'])) - strtotime(Helper::getDT($request['period']['start']));
             foreach ($events as $event) {
                 $new_event = $event->replicate();
                 $new_event->start = date('Y-m-d H:i:s', strtotime($new_event->start) + $razn);
                 $new_event->end = date('Y-m-d H:i:s', strtotime($new_event->end) + $razn);
-                $new_event->driver_id = $request['driver']['id'];
+                $new_event->driver_id = $request['driver'];
                 $new_event->student_id = null;
                 $new_event->save();
                 $res[] = $new_event;
@@ -81,7 +106,7 @@ class DriverController extends Controller
             ]);
         } elseif ($request['tab'] == 'template') {
             $template = Template::find($request['template']['template']['id']);
-            $events = $template->createEvents(Helper::getDT($request['template']['start']),Helper::getDT($request['template']['end']),$request['driver']['id']);
+            $events = $template->createEvents(Helper::getDT($request['template']['start']),Helper::getDT($request['template']['end']),$request['driver']);
             return response()->json([
                 'events' => $events
             ]);
@@ -93,12 +118,12 @@ class DriverController extends Controller
                 $date = date('Y-m-d', strtotime($request['copy']['curdate']) - 24*3600);
                 $razn = 24*3600;
             }
-            $events = $eventService->getEvents($date,$date);
+            $events = $eventService->getEvents($date,$date,$driver_id);
             foreach ($events as $event) {
                 $new_event = $event->replicate();
                 $new_event->start = date('Y-m-d H:i:s', strtotime($new_event->start) + $razn);
                 $new_event->end = date('Y-m-d H:i:s', strtotime($new_event->end) + $razn);
-                $new_event->driver_id = $request['driver']['id'];
+                $new_event->driver_id = $request['driver'];
                 $new_event->student_id = null;
                 $new_event->save();
                 $res[] = $new_event;

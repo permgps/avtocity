@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use App\Services\Helper;
+use App\Models\Event;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Event extends Model
+class Payment extends Model
 {
     use SoftDeletes;
     /**
@@ -15,11 +17,8 @@ class Event extends Model
      * @var array
      */
     protected $fillable = [
-        'start',
-        'end',
+        'user_id',
         'hours',
-        'driver_id',
-        'student_id'
     ];
 
     /**
@@ -31,13 +30,8 @@ class Event extends Model
 
     ];
 
-    public function student()
-    {
-        return $this->hasOne('App\Models\User', 'student_id');
-    }
-
-    public function driver()
-    {
-        return $this->hasOne('App\Models\User', 'driver_id');
-    }
+    protected $casts = [
+        'id' => 'int',
+        'hours' => 'int'
+    ];
 }

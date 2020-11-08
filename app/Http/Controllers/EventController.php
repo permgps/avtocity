@@ -12,7 +12,16 @@ class EventController extends Controller
 {
     public function load(Request $request)
     {
-        $events = Event::get();
+        $user = $request->user();
+        if ($user->role == 1) {
+            $events = Event::get();
+        }
+        if ($user->role == 4) {
+            $events = Event::where('driver_id',$user->id)->get();
+        }
+        if ($user->role == 5) {
+            $events = Event::where('student_id',$user->id)->get();
+        }
         return new EventCollection($events);
     }
 
