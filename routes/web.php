@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\TestController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -24,3 +25,5 @@ Route::get('/app/{any}', function ($any) {
 Route::get('/login', function () {
     return view('welcome');
 });
+
+Route::get('/test', [TestController::class, 'test']);

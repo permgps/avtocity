@@ -7,6 +7,7 @@ use App\Models\Event;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Log;
 
 class Template extends Model
 {
@@ -40,7 +41,10 @@ class Template extends Model
         $events = [];
         $days = Helper::getDaysArr($start,$end);
         foreach ($days as $day) {
-            $number_day = date('w', strtotime($day));
+            $number_day = (int)date('w', strtotime($day));
+            if ($number_day === 0) {
+                $number_day = 7;
+            }
             $date = date('Y-m-d',strtotime($day));
             foreach ($this->opts as $templ) {
                 if (in_array($number_day,$templ['days'])) {

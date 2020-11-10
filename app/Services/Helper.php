@@ -15,11 +15,20 @@ class Helper
         return $is_timestamp ? strtotime($date) : $date;
     }
 
+    public static function onlyDT($date)
+    {
+        if (strlen($date) < 12) {
+            return $date;
+        }
+        $arr = explode(' ',$date);
+        return $arr[0];
+    }
+
     public static function getDaysArr($start,$end)
     {
-        $start = self::getDT($start);
+        $start = self::onlyDT($start).' 00:00:00';
         $start_dt = strtotime($start);
-        $end = self::getDT($end);
+        $end = self::onlyDT($end).' 23:59:59';
         $end_dt = strtotime($end);
         $res = [];
         $curr = $start_dt;

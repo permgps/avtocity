@@ -17,9 +17,14 @@ class StudentController extends Controller
             $students = User::where('role',5)->with('drivers')->get();
         }
         if ($user->role == 4) {
-            $students = User::cursor()->filter(function ($student) use ($user) {
-                return $student->role == 5 && $student->drivers && $student->drivers[0]->id == $user->id;
-            });
+            $students = User::with(['drivers'])->where('role',5)->get();
+            foreach ($students AS $student) {
+                if ($student->drivers && $student->drivers[0]->id == $user->id) {
+
+                } else {
+                    unset($student);
+                }
+            }
         }
         if ($user->role == 5) {
             $students = User::where('id',$user->id)->with('drivers')->get();
