@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CarController;
 use App\Http\Controllers\DriverController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TemplateController;
 
@@ -52,4 +53,10 @@ Route::group(['prefix' => 'event','middleware' => ['auth']], function() {
     Route::post('save',[EventController::class, 'save']);
     Route::post('delete',[EventController::class, 'delete']);
     Route::post('clearstudent',[EventController::class, 'clearstudent']);
+});
+
+Route::group(['prefix' => 'payment','middleware' => ['auth']], function() {
+    Route::get('load',[PaymentController::class, 'load']);
+    Route::post('save',[PaymentController::class, 'save']);
+    Route::post('delete',[PaymentController::class, 'delete']);
 });

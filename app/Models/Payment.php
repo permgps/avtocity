@@ -34,4 +34,9 @@ class Payment extends Model
         'id' => 'int',
         'hours' => 'int'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo('App\Models\User');
+    }
 }
