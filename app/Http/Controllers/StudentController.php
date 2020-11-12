@@ -54,7 +54,7 @@ class StudentController extends Controller
     {
         $student = User::where(['id' => $request['id'], 'role' => 5])->first();
         if ($student) {
-            $student->update($request->only('name', 'status'));
+            $student->update($request->only('name', 'status', 'phone'));
             $student->drivers()->detach();
             if ($request['driver']) {
                 $student->drivers()->attach($request['driver']);

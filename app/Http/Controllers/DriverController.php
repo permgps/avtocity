@@ -51,7 +51,7 @@ class DriverController extends Controller
     public function edit(DriverEditRequest $request)
     {
         $driver = User::find($request['id']);
-        $driver->update($request->only('name', 'status'));
+        $driver->update($request->only('name', 'status', 'phone'));
         $driver->cars()->detach();
         if ($request['car_id']) {
             $driver->cars()->attach($request['car_id']);

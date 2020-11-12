@@ -74,10 +74,19 @@ class EventController extends Controller
                 'id' => $request['id']
             ],403);
         }
-        if ($user->role == 5 && $user->id != $event->student_id) {
-            return response()->json([
-                'id' => $request['id']
-            ],403);
+        if ($user->role == 5) {
+            if ($user->id != $event->student_id) {
+                return response()->json([
+                    'id' => $request['id']
+                ],403);
+            }
+            if (strtotime($event->start) - time() < 24*3600) {
+                return response()->json([
+                    'errors' => [
+                        'message' => 'Нельзя отменить запись менее чем за сутки!'
+                    ]
+                ],422);
+            }
         }
         if ($event) {
             $eventService = new Events();
