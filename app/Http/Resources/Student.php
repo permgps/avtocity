@@ -20,7 +20,7 @@ class Student extends JsonResource
             'name' => $this->name,
             'status' => $this->status,
             'drivers' => $this->drivers,
-            'balance' => $this->payments->sum('hours')
+            'balance' => $this->balance
         ];
     }
 }

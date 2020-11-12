@@ -15,7 +15,6 @@ class DriverController extends Controller
     public function load(Request $request)
     {
         $user = $request->user();
-        $user = $request->user();
         if ($user->role == 1) {
             $drivers = User::where('role',4)->with('cars')->get();
         }
@@ -23,7 +22,7 @@ class DriverController extends Controller
             $drivers = User::where('id',$user->id)->with('cars')->get();
         }
         if ($user->role == 5) {
-            exit;
+            $drivers = $user->drivers;
         }
 
         return response()->json([

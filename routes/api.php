@@ -53,6 +53,7 @@ Route::group(['prefix' => 'event','middleware' => ['auth']], function() {
     Route::post('save',[EventController::class, 'save']);
     Route::post('delete',[EventController::class, 'delete']);
     Route::post('clearstudent',[EventController::class, 'clearstudent']);
+    Route::post('join',[EventController::class, 'join']);
 });
 
 Route::group(['prefix' => 'payment','middleware' => ['auth']], function() {
