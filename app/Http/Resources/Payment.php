@@ -18,6 +18,7 @@ class Payment extends JsonResource
             'id' => $this->id,
             'hours' => $this->hours,
             'user_id' => $this->user_id,
+            'driver_id' => $this->user->drivers ? $this->user->drivers[0]->id : null,
             'user' => $this->user,
             'date' => date('H:i d/m/Y', strtotime($this->created_at)),
         ];
