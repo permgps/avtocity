@@ -14,10 +14,12 @@ class Student extends JsonResource
      */
     public function toArray($request)
     {
+        $user = $request->user();
         return [
             'id' => $this->id,
             'phone' => $this->phone,
             'name' => $this->name,
+            'pass' => $user->role == 1 ? $this->pass : '',
             'status' => $this->status,
             'drivers' => $this->drivers,
             'balance' => $this->balance

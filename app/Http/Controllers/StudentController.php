@@ -18,11 +18,12 @@ class StudentController extends Controller
         }
         if ($user->role == 4) {
             $students = User::with(['drivers'])->where('role',5)->get();
-            foreach ($students AS $student) {
-                if ($student->drivers && $student->drivers[0]->id == $user->id) {
+            foreach ($students AS $key => $student) {
+                if ($student->drivers && $student->drivers[0]->id === $user->id) {
 
                 } else {
-                    unset($student);
+                    //Log::info('unset_student',$student);
+                    unset($students[$key]);
                 }
             }
         }
@@ -37,7 +38,8 @@ class StudentController extends Controller
         $student = User::create([
             'name' => $request['name'],
             'phone' => $request['phone'],
-            'password' => bcrypt($request['password'])
+            'password' => bcrypt($request['password']),
+            'pass' => $request['password']
         ]);
         if ($request['driver']) {
             $student->drivers()->attach($request['driver']);
@@ -61,6 +63,7 @@ class StudentController extends Controller
             }
             if ($request['password']) {
                 $student->password = bcrypt($request['password']);
+                $student->pass = $request['password'];
                 $student->save();
             }
             return response()->json([

@@ -35,7 +35,8 @@ class DriverController extends Controller
         $driver = User::create([
             'name' => $request['name'],
             'phone' => $request['phone'],
-            'password' => bcrypt($request['password'])
+            'password' => bcrypt($request['password']),
+            'pass' => $request['password']
         ]);
         if ($request['car_id']) {
             $driver->cars()->attach($request['car_id']);
@@ -58,6 +59,7 @@ class DriverController extends Controller
         }
         if ($request['password']) {
             $driver->password = bcrypt($request['password']);
+            $driver->pass = $request['password'];
             $driver->save();
         }
     }
