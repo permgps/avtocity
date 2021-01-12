@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 
 class DriverController extends Controller
 {
+
     public function load(Request $request)
     {
         $user = $request->user();
@@ -132,6 +133,29 @@ class DriverController extends Controller
             return response()->json([
                 'events' => $res
             ]);
+        }
+    }
+
+    public function report(Request $request)
+    {
+        $user = $request->user();
+        if ($user->role == 1) {
+            $eventService = new Events();
+            $events = $eventService->getEvents($request['from'],$request['to']);
+            $drivers = User::where('role',4)->with('cars')->get()->map(function ($driver, $key) use ($events) {
+                $driver->all = count($events->filter(function ($event, $key) use ($driver)  {
+                    return $event->driver_id == $driver->id;
+                }));
+                $driver->feel = count($events->filter(function ($event, $key) use ($driver)  {
+                    return $event->driver_id == $driver->id && $event->student_id !== null;
+                }));
+                return $driver;
+            });
+            return response()->json([
+                'drivers' => $drivers
+            ]);
+        } else {
+            return response(null,401);
         }
     }
 }

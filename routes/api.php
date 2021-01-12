@@ -33,6 +33,7 @@ Route::group(['prefix' => 'driver','middleware' => ['auth']], function() {
     Route::post('edit',[DriverController::class, 'edit']);
     Route::post('delete',[DriverController::class, 'delete']);
     Route::post('feel',[DriverController::class, 'feel']);
+    Route::get('report',[DriverController::class, 'report']);
 });
 
 Route::group(['prefix' => 'student','middleware' => ['auth']], function() {
