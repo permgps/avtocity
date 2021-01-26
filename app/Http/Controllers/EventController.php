@@ -56,13 +56,49 @@ class EventController extends Controller
 
     public function delete(Request $request)
     {
+        $period = $request['period'];
         $event = Event::find($request['id']);
         if ($event) {
-            $event->delete();
+            switch ($period) {
+                case 'item':
+                    $event->delete();
+                    break;
+
+                case 'day':
+                    $events = Event::where('start', '>=', date('Y-m-d 00:00:00',strtotime($event->start)))
+                        ->where('start', '<=', date('Y-m-d 23:59:59',strtotime($event->start)))
+                        ->get();
+                    foreach ($events as $ev) {
+                        $ev->delete();
+                    }
+                    break;
+
+                case 'week':
+                    $start = date("Y-m-d", strtotime('monday this week', strtotime($event->start)));
+                    $end = date("Y-m-d", strtotime('saturday this week', strtotime($event->start)) + 24*3600);
+                    $events = Event::where('start', '>=', date('Y-m-d 00:00:00',strtotime($start)))
+                        ->where('start', '<=', date('Y-m-d 23:59:59',strtotime($end)))
+                        ->get();
+                    foreach ($events as $ev) {
+                        $ev->delete();
+                    }
+                    break;
+
+                case 'month':
+                    $start = date("Y-m-01", strtotime($event->start));
+                    $end = date("Y-m-31", strtotime($event->start));
+                    $events = Event::where('start', '>=', date('Y-m-d 00:00:00',strtotime($start)))
+                        ->where('start', '<=', date('Y-m-d 23:59:59',strtotime($end)))
+                        ->get();
+                    foreach ($events as $ev) {
+                        $ev->delete();
+                    }
+                    break;
+            }
+            return response()->json([
+                'id' => $request['id']
+            ]);
         }
-        return response()->json([
-            'id' => $request['id']
-        ]);
     }
 
     public function clearstudent(Request $request)

@@ -146,9 +146,9 @@ class DriverController extends Controller
                 $driver->all = count($events->filter(function ($event, $key) use ($driver)  {
                     return $event->driver_id == $driver->id;
                 }));
-                $driver->feel = count($events->filter(function ($event, $key) use ($driver)  {
+                $driver->feel = $events->filter(function ($event, $key) use ($driver)  {
                     return $event->driver_id == $driver->id && $event->student_id !== null;
-                }));
+                })->sum('hours');
                 return $driver;
             });
             return response()->json([
