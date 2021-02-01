@@ -27,6 +27,7 @@ class Event extends JsonResource
             'icon' => 'alarm',
             'driver_id' => $this->driver_id,
             'student_id' => $this->student_id,
+            'success' => strtotime($this->end) < time()
         ];
     }
 }
