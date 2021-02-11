@@ -35,6 +35,12 @@ class EventController extends Controller
     {
         if ($request['id']) {
             $event = Event::find($request['id']);
+            if (!$event) {
+                return response()->json([
+                    'id' => null,
+                    'message' => 'Нет такой записи!'
+                ]);
+            }
         } else {
             $event = new Event();
         }
@@ -45,6 +51,12 @@ class EventController extends Controller
             $event->driver_id = $request['driver'];
         }
         if ($request['student']) {
+            if ($event->student_id) {
+                return response()->json([
+                    'id' => null,
+                    'message' => 'Запись занята!'
+                ]);
+            }
             $event->student_id = $request['student'];
         }
         $event->save();
