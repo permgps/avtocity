@@ -51,7 +51,7 @@ class Template extends Model
                     foreach ($templ['hours'] as $hour) {
                         $events[] = Event::create([
                             'start' => $date.' '.$hour['start'],
-                            'end' => date('Y-m-d H:i:s',strtotime($date.' '.$hour['start']) + $hour['hours']*2700),
+                            'end' => date('Y-m-d H:i:s',strtotime($date.' '.$hour['start']) + $hour['hours']*5400),
                             'hours' => $hour['hours'],
                             'driver_id' => $driver_id
                         ]);

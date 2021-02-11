@@ -40,7 +40,7 @@ class EventController extends Controller
         }
         $event->start = $request['date'].' '.$request['time'].':00';
         $event->hours = $request['hours'];
-        $event->end = date('Y-m-d H:i:s',strtotime($event->start) + $event->hours*2700);
+        $event->end = date('Y-m-d H:i:s',strtotime($event->start) + $event->hours*5400);
         if ($request['driver']) {
             $event->driver_id = $request['driver'];
         }
@@ -139,7 +139,7 @@ class EventController extends Controller
         if ($user->balance <= 0) {
             return response()->json([
                 'errors' => [
-                    'message' => 'У Вас нет свободных часов для записи! Пополните баланс!'
+                    'message' => 'У Вас нет свободных занятий для записи! Пополните баланс!'
                 ]
             ],422);
         }
