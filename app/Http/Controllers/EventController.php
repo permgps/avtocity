@@ -164,6 +164,12 @@ class EventController extends Controller
                 ]
             ],422);
         }
+        if ($event->student_id) {
+            return response()->json([
+                'id' => null,
+                'message' => 'Запись занята!'
+            ]);
+        }
         $event->student_id = $user->id;
         $event->save();
 
